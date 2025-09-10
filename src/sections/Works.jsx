@@ -1,0 +1,72 @@
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+import { myWorks } from '../constants/index.js';
+
+const Works= () => {
+  useGSAP(() => {
+    gsap.fromTo(
+      `.animatedText`,
+      { opacity: 0 },
+      { opacity: 1, duration: 1, stagger: 0.2, ease: 'power2.inOut' }
+    );
+  }, []);
+
+  return (
+    <section className="c-space my-20">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+  {myWorks.map((project, index) => (
+    <div 
+      key={index} 
+      className="flex flex-col gap-5 relative sm:p-10 py-10 px-5 shadow-2xl shadow-black-200 rounded-lg"
+    >
+      <div className="absolute top-0 right-0">
+        <img
+          src={project.spotlight}
+          alt="spotlight"
+          className="w-full h-96 object-cover rounded-xl"
+        />
+      </div>
+
+      <div
+        className="p-3 backdrop-filter backdrop-blur-3xl w-fit rounded-lg"
+        style={project.logoStyle}
+      >
+        <img className="w-10 h-10 shadow-sm" src={project.logo} alt="logo" />                
+      </div>
+
+      <div className="flex flex-col gap-5 text-black my-5">
+        <p className="text-black text-2xl font-semibold animatedText">{project.title}</p>
+        <p className="animatedText">{project.desc}</p>
+        <p className="animatedText">{project.subdesc}</p>
+      </div>
+
+      <div className="flex items-center justify-between flex-wrap gap-5">
+        <div className="flex items-center gap-3">
+          {project.tags.map((tag, tagIndex) => (
+            <div key={tagIndex} className="tech-logo">
+              <img src={tag.path} alt={tag.name} />
+            </div>
+          ))}
+        </div>
+
+        <a
+          className="flex items-center gap-2 cursor-pointer text-black"
+          href={project.href}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <p>Check Details</p>
+          <img src="/assets/arrow-up.png" alt="arrow" className="w-3 h-3" />
+        </a>
+      </div>
+    </div>
+  ))}
+</div>
+
+    </section>
+  );
+};
+
+export default Works;
