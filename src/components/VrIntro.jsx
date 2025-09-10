@@ -274,7 +274,7 @@ export default function VrBtoB() {
 )}
 
         {!inVR ? (
-          <Canvas camera={{ position: [0, 0, 5] }} frameloop="demand">
+          <Canvas camera={{ position: [0, 0, 5] }} >
             <ambientLight intensity={1} />
             <directionalLight position={[5, 5, 5]} />
             <Suspense fallback={<CanvasLoader />}>
@@ -286,7 +286,7 @@ export default function VrBtoB() {
         ) : (
           <div className="w-full h-full relative">
 
-            <Canvas camera={{ position: [0, 0, 0.1] }} frameloop="demand">
+            <Canvas camera={{ position: [0, 0, 0.1] }} >
               <ambientLight intensity={1} />
 
             {videoTexture && (
