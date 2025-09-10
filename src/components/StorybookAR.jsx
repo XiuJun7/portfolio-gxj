@@ -45,15 +45,15 @@ export default function StoryBookAR() {
       {/* Tools */}
       <div className="flex items-center gap-6">
         <div className="flex flex-col items-center">
-          <img src="/assets/figma.svg" alt="Figma" className="w-10 h-10" />
+          <img src="/assets/figma.svg" alt="Figma" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Figma</span>
         </div>
         <div className="flex flex-col items-center">
-          <img src="/assets/Unity.png" alt="Unity 3D" className="w-10 h-10" />
+          <img src="/assets/Unity.png" alt="Unity 3D" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Unity 3D</span>
         </div>
         <div className="flex flex-col items-center">
-          <img src="/assets/vuforia.png" alt="UVuforia" className="w-10 h-10" />
+          <img src="/assets/vuforia.png" alt="UVuforia" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Vuforia</span>
         </div>
       </div>
@@ -64,6 +64,7 @@ export default function StoryBookAR() {
       <img
         src="/assets/sallybook.jpg"
         alt="Main UI"
+        loading="lazy"
         className=" w-[300px] mx-auto relative z-10 transition-transform duration-500 hover:rotate-[25deg] hover:scale-100 rounded-xl shadow-lg"
       />
     </div>
@@ -132,6 +133,7 @@ export default function StoryBookAR() {
             <video
               src="/assets/video/Ksally.mp4"
               width="350"
+              preload="metadata"
               autoPlay
               muted
               loop
@@ -150,6 +152,7 @@ export default function StoryBookAR() {
             key={i}
             src={`/assets/ar/ar${i + 1}.jpg`}
             alt={`AR ${i + 1}`}
+            loading="lazy" 
             className="rounded-lg shadow-md"
           />
         ))}
@@ -163,6 +166,7 @@ export default function StoryBookAR() {
             key={i}
             src={`/assets/ar/ar${i + 7}.jpg`}
             alt={`AR ${i + 7}`}
+            loading="lazy" 
             className="rounded-lg shadow-md"
           />
         ))}

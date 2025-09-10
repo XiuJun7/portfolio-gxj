@@ -1,9 +1,13 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { motion } from 'framer-motion'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect,Suspense } from 'react'
 import * as THREE from 'three'
 import { FaPlay } from 'react-icons/fa'
+import CanvasLoader from '../components/Loading.jsx';
+
+// 预加载模型
+useGLTF.preload('/models/oculus_quest_2.glb')
 
 function VRHeadsetModel({ onClick }) {
   const { scene } = useGLTF('/models/oculus_quest_2.glb')
@@ -109,15 +113,15 @@ export default function VrBtoB() {
 
       <div className="flex items-center gap-6">
         <div className="flex flex-col items-center">
-          <img src="/assets/figma.svg" alt="Figma" className="w-10 h-10" />
+          <img src="/assets/figma.svg" alt="Figma" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Figma</span>
         </div>
         <div className="flex flex-col items-center">
-          <img src="/assets/Unity.png" alt="Unity 3D" className="w-10 h-10" />
+          <img src="/assets/Unity.png" alt="Unity 3D" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Unity 3D</span>
         </div>
         <div className="flex flex-col items-center">
-          <img src="/assets/Blender.png" alt="Blender" className="w-10 h-10" />
+          <img src="/assets/Blender.png" alt="Blender" loading="lazy" className="w-10 h-10" />
           <span className="text-sm">Blender</span>
         </div>
       </div>
@@ -127,6 +131,7 @@ export default function VrBtoB() {
       <img
         src="/assets/VrCoffee.png"
         alt="Main UI"
+        loading="lazy" 
         className=" w-[300px] mx-auto relative z-10 transition-transform duration-500 hover:rotate-[25deg] hover:scale-100 rounded-xl shadow-lg"
       />
     </div>
@@ -195,6 +200,7 @@ export default function VrBtoB() {
             <video
               src={item.video}
               className="w-full h-40 object-cover"
+              preload="metadata"
               autoPlay
               loop
               muted
@@ -227,19 +233,20 @@ export default function VrBtoB() {
 )}
 
         {!inVR ? (
-          <Canvas camera={{ position: [0, 0, 5] }}>
+          <Canvas camera={{ position: [0, 0, 5] }} frameloop="demand">
             <ambientLight intensity={1} />
             <directionalLight position={[5, 5, 5]} />
-
-            {/* VR Headset 模型 */}
+            <Suspense fallback={<CanvasLoader />}>
+              {/* VR Headset 模型 */}
             <VRHeadsetModel onClick={enterVR} />
+            </Suspense>           
 
             <OrbitControls enableZoom={false} />
           </Canvas>
         ) : (
           <div className="w-full h-full relative">
             {/* 进入 VR 后显示 360 视频背景 */}
-            <Canvas camera={{ position: [0, 0, 0.1] }}>
+            <Canvas camera={{ position: [0, 0, 0.1] }} frameloop="demand">
               <ambientLight intensity={1} />
 
               {/* 用平面代替球体 */}
@@ -285,7 +292,7 @@ export default function VrBtoB() {
               src="/assets/video/CafeVR.mp4"             
               loop
               playsInline
-              
+              preload="metadata"
             />
           </div>
         )}

@@ -84,11 +84,11 @@ export default function ProjectCard() {
           {/* Tools */}
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-center">
-              <img src="/assets/figma.svg" alt="Figma" className="w-10 h-10" />
+              <img src="/assets/figma.svg" alt="Figma" loading="lazy" className="w-10 h-10" />
               <span className="text-sm">Figma</span>
             </div>
             <div className="flex flex-col items-center">
-              <img src="/assets/Unity.png" alt="Unity 3D" className="w-10 h-10" />
+              <img src="/assets/Unity.png" alt="Unity 3D" loading="lazy" className="w-10 h-10" />
               <span className="text-sm">Unity 3D</span>
             </div>
           </div>
@@ -99,6 +99,7 @@ export default function ProjectCard() {
           
           <img   src="/assets/mainplg.png"
             alt="Main UI"
+            loading="lazy"
             className="rotate-[20deg] w-[300px] mx-auto relative z-10 transition-transform duration-500 hover:rotate-[25deg] hover:scale-150"
           />
 
@@ -166,7 +167,7 @@ export default function ProjectCard() {
               <div className="absolute h-full w-full bg-white border rounded-xl shadow-xl flex items-center justify-center overflow-hidden [transform:rotateY(180deg)] [backface-visibility:hidden]">                
               <video 
                 className="max-w-full max-h-full object-contain " 
-                src={item.video}  autoPlay loop muted playsInline />                
+                src={item.video}  autoPlay preload="metadata" loop muted playsInline />                
               </div>
             </div>
           </div>

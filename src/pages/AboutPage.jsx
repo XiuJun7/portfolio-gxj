@@ -56,7 +56,7 @@ const AboutPage = () => {
       </div>
 
       <div className="h-[500px] w-full rounded-lg mt-10">
-        <Canvas>
+        <Canvas frameloop="demand">
           <ambientLight intensity={0.5} />
           <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} />
           <directionalLight position={[5, 5, 10]} intensity={0.5} />

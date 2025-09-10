@@ -4,115 +4,73 @@ import { InertiaPlugin } from "gsap/InertiaPlugin";
 
 gsap.registerPlugin(InertiaPlugin);
 
+const images = Array.from({ length: 12 }, (_, i) => `/assets/InertiaMedia/${String(i + 1).padStart(2, "0")}.png`);
+
 export default function InertiaMedia() {
-  const sectionRef = useRef();
+  const sectionRef = useRef(null);
+  const mousePos = useRef({ x: 0, y: 0, dx: 0, dy: 0 });
 
   useEffect(() => {
-    const root = sectionRef.current;
+    const section = sectionRef.current;
 
-    let prevX = 0;
-    let prevY = 0;
-    let deltaX = 0;
-    let deltaY = 0;
-
+    // 鼠标移动只在 section 内监听
     const updateMouse = (e) => {
-      deltaX = e.clientX - prevX;
-      deltaY = e.clientY - prevY;
-      prevX = e.clientX;
-      prevY = e.clientY;
+      mousePos.current.dx = e.clientX - mousePos.current.x;
+      mousePos.current.dy = e.clientY - mousePos.current.y;
+      mousePos.current.x = e.clientX;
+      mousePos.current.y = e.clientY;
     };
 
-    window.addEventListener("mousemove", updateMouse);
+    section.addEventListener("mousemove", updateMouse);
 
-    root.querySelectorAll(".medias .media").forEach((el) => {
-      el.addEventListener("mouseenter", () => {
-        const media = el.querySelector("img");
+    // 绑定 hover 动画
+    const medias = section.querySelectorAll(".media");
+    const handlers = [];
 
-        const tl = gsap.timeline({
-          onComplete: () => {
-            tl.kill();
-          },
-        });
+    medias.forEach((el) => {
+      const media = el.querySelector("img");
 
-        tl.timeScale(1.2);
-
-        tl.to(media, {
+      const onEnter = () => {
+        gsap.to(media, {
           inertia: {
-            x: {
-              velocity: deltaX * 40,
-              end: 0,
-            },
-            y: {
-              velocity: deltaY * 40,
-              end: 0,
-            },
+            x: { velocity: mousePos.current.dx * 40, end: 0 },
+            y: { velocity: mousePos.current.dy * 40, end: 0 },
           },
         });
 
-        tl.fromTo(
+        gsap.fromTo(
           media,
+          { rotate: 0 },
           {
-            rotate: 0,
-          },
-          {
-            duration: 0.4,
             rotate: (Math.random() - 0.5) * 30,
+            duration: 0.4,
             yoyo: true,
             repeat: 1,
             ease: "power1.inOut",
-          },
-          "<"
+          }
         );
-      });
+      };
+
+      el.addEventListener("mouseenter", onEnter);
+      handlers.push({ el, onEnter });
     });
 
     return () => {
-      window.removeEventListener("mousemove", updateMouse);
+      section.removeEventListener("mousemove", updateMouse);
+      handlers.forEach(({ el, onEnter }) => el.removeEventListener("mouseenter", onEnter));
     };
   }, []);
 
   return (
     <section className="mwg_effect000 c-space my-50" ref={sectionRef}>
-  <p className="head-text mt-24 text-3xl font-bold text-center">My Projects</p>
-  <div className="medias">
-    <div className="media">
-      <img src="/assets/InertiaMedia/01.png" alt="Project 1" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/02.png" alt="Project 2" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/03.png" alt="Project 3" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/04.png" alt="Project 4" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/05.png" alt="Project 5" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/06.png" alt="Project 6" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/07.png" alt="Project 7" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/08.png" alt="Project 8" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/09.png" alt="Project 9" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/10.png" alt="Project 10" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/11.png" alt="Project 11" />
-    </div>
-    <div className="media">
-      <img src="/assets/InertiaMedia/12.png" alt="Project 12" />
-    </div>
-  </div>
-</section>
-
+      <p className="head-text mt-24 text-3xl font-bold text-center">My Projects</p>
+      <div className="medias grid grid-cols-2 md:grid-cols-4 gap-6">
+        {images.map((src, idx) => (
+          <div key={idx} className="media">
+            <img src={src} loading="lazy" alt={`Project ${idx + 1}`} />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

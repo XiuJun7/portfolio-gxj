@@ -1,9 +1,13 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { motion } from 'framer-motion'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import * as THREE from 'three'
 import { FaPlay } from 'react-icons/fa'
+import CanvasLoader from '../components/Loading.jsx';
+
+// 预加载模型
+useGLTF.preload('/models/oculus_quest_2.glb')
 
 function VRHeadsetModel({ onClick }) {
   const { scene } = useGLTF('/models/oculus_quest_2.glb')
@@ -214,6 +218,7 @@ export default function VrBtoB() {
             <img
               src="/assets/vrimg.png"
               alt="VR Scene"
+              loading="lazy" 
               className="rounded-xl object-contain h-94 w-94"
             />
             <p className="mt-4 text-center text-black text-sm">
@@ -236,6 +241,7 @@ export default function VrBtoB() {
             <video
               src={item.video}
               className="w-full h-40 object-cover"
+              preload="metadata"
               autoPlay
               loop
               muted
@@ -263,23 +269,24 @@ export default function VrBtoB() {
       {fadeBlack && (
   <div className="absolute inset-0 flex items-center justify-center z-20">
     <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
-    <span className="ml-4 text-white text-xl">Loading...</span>
+    <span className="ml-4 text-black text-xl">Loading...</span>
   </div>
 )}
 
         {!inVR ? (
-          <Canvas camera={{ position: [0, 0, 5] }}>
+          <Canvas camera={{ position: [0, 0, 5] }} frameloop="demand">
             <ambientLight intensity={1} />
             <directionalLight position={[5, 5, 5]} />
-
-            <VRHeadsetModel onClick={enterVR} />
+            <Suspense fallback={<CanvasLoader />}>
+              <VRHeadsetModel onClick={enterVR} />
+            </Suspense>           
 
             <OrbitControls enableZoom={false} />
           </Canvas>
         ) : (
           <div className="w-full h-full relative">
 
-            <Canvas camera={{ position: [0, 0, 0.1] }}>
+            <Canvas camera={{ position: [0, 0, 0.1] }} frameloop="demand">
               <ambientLight intensity={1} />
 
             {videoTexture && (
@@ -322,7 +329,7 @@ export default function VrBtoB() {
               src="/assets/video/VRvideo.mp4"             
               loop
               playsInline
-              
+              preload="metadata"
             />
           </div>
         )}

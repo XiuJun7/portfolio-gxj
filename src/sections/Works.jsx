@@ -25,6 +25,7 @@ const Works= () => {
         <img
           src={project.spotlight}
           alt="spotlight"
+          loading="lazy" 
           className="w-full h-96 object-cover rounded-xl"
         />
       </div>
@@ -33,7 +34,7 @@ const Works= () => {
         className="p-3 backdrop-filter backdrop-blur-3xl w-fit rounded-lg"
         style={project.logoStyle}
       >
-        <img className="w-10 h-10 shadow-sm" src={project.logo} alt="logo" />                
+        <img className="w-10 h-10 shadow-sm" loading="lazy" src={project.logo} alt="logo" />                
       </div>
 
       <div className="flex flex-col gap-5 text-black my-5">
@@ -46,7 +47,7 @@ const Works= () => {
         <div className="flex items-center gap-3">
           {project.tags.map((tag, tagIndex) => (
             <div key={tagIndex} className="tech-logo">
-              <img src={tag.path} alt={tag.name} />
+              <img src={tag.path} loading="lazy" alt={tag.name} />
             </div>
           ))}
         </div>
@@ -58,7 +59,7 @@ const Works= () => {
           rel="noreferrer"
         >
           <p>Check Details</p>
-          <img src="/assets/arrow-up.png" alt="arrow" className="w-3 h-3" />
+          <img src="/assets/arrow-up.png" alt="arrow" loading="lazy" className="w-3 h-3" />
         </a>
       </div>
     </div>

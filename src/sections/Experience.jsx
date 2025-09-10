@@ -21,7 +21,7 @@ const WorkExperience = () => {
                   className="work-content_container group">
                   <div className="flex flex-col h-full justify-start items-center py-2">
                     <div className="work-content_logo" >
-                      <img className="w-full h-full" src={item.icon} alt="" />
+                      <img className="w-full h-full" loading="lazy" src={item.icon} alt="" />
                     </div>
 
                     <div className="work-content_bar" />

@@ -94,6 +94,7 @@ export default function TechStackSection() {
               <img
                 src={tech.image}
                 alt={tech.name}
+                loading="lazy"
                 className="w-16 h-16 object-contain"
               />
               <p className="mt-2 text-sm text-center">{tech.name}</p>

@@ -74,6 +74,7 @@ const DetailPage = () => {
           <img
             src={project.bgImage}
             alt={project.title}
+            loading="lazy" 
             className="rounded-3xl w-full h-auto object-cover shadow-lg"
           />
         </div>

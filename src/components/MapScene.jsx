@@ -168,7 +168,7 @@ function StationPopup({ activeStation }) {
   {video && (
     <video 
     className="max-w-full max-h-full object-contain " 
-    src={video}  autoPlay loop muted playsInline />
+    src={video}  autoPlay loop preload="metadata" muted playsInline />
   )}
   {UIComponent && <UIComponent />}
 </div>
@@ -198,6 +198,7 @@ export default function App() {
         <Canvas
           style={{ width: "100%", height: "100%" }} // 单独控制 Canvas 全屏
           camera={{ position: [0, 0, 8], fov: 50 }}
+          frameloop="demand"
         >
           <ambientLight intensity={1} />
           <directionalLight position={[5, 5, 5]} />

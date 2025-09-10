@@ -99,6 +99,7 @@ function ScreenshotCarousel() {
           <img
             src={s.src}
             alt={s.title}
+            loading="lazy"
             className="w-full h-64 object-cover group-hover:opacity-95 transition"
           />
           <figcaption className="p-4">

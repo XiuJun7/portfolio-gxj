@@ -1,6 +1,5 @@
 import emailjs from "@emailjs/browser";
 import { useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as random from "maath/random";
 import { motion } from "framer-motion";
@@ -96,14 +95,7 @@ const Contact = () => {
       {/* 背景光晕 */}
       <div className="absolute inset-0 -z-10 flex items-center justify-center">
         <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-r from-gray-200 via-purple-100 to-blue-100 blur-3xl opacity-70" />
-      </div>
-
-      {/* 粒子背景 */}
-      <div className="absolute inset-0 -z-20">
-        <Canvas camera={{ position: [0, 0, 2] }}>
-          <FloatingParticles />
-        </Canvas>
-      </div>
+      </div>      
 
       {/* 表单卡片 */}
       <motion.div

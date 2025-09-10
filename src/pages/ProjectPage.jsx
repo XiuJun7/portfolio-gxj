@@ -1,8 +1,3 @@
-// src/pages/AboutPage.jsx
-import { Suspense, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import CanvasLoader from '../components/Loading.jsx';
 import Works from '../sections/Works';
 import InertiaMedia from '../components/InertiaMedia';
 import { useMediaQuery } from 'react-responsive';

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { Draggable } from 'gsap/Draggable'
@@ -11,8 +11,7 @@ export default function CoverCarousel() {
   const containerRef = useRef(null)
   const proxyRef = useRef(null)
   const boxesRef = useRef([])
-  
-  // ✅ 获取 slug
+
   const location = useLocation()
   const slug = useMemo(() => {
     const parts = location.pathname.split('/')
@@ -20,48 +19,41 @@ export default function CoverCarousel() {
   }, [location.pathname])
 
   const covers = UiImage[slug] || []
-  const titleContent = TitleUi[slug];
+  const titleContent = TitleUi[slug]
 
+  const [centerIndex, setCenterIndex] = useState(2) // 当前居中图片索引
+
+  const total = covers.length
+  const wrap = gsap.utils.wrap(0, total)
+
+  const showSlide = (index) => {
+    const BOXES = boxesRef.current
+    BOXES.forEach((box, i) => {
+      let offset = i - index
+      if (offset > total / 2) offset -= total
+      if (offset < -total / 2) offset += total
+
+      const clampedOffset = Math.max(-2, Math.min(2, offset))
+
+      gsap.to(box, {
+        x: clampedOffset * 220,
+        scale: offset === 0 ? 1.2 : 0.8,
+        opacity: offset === 0 ? 1 : (Math.abs(offset) > 2 ? 0 : 0.6),
+        zIndex: 10 - Math.abs(offset),
+        duration: 0.5,
+        ease: 'power3.out',
+      })
+    })
+  }
+
+  const next = () => setCenterIndex((prev) => wrap(prev + 1))
+  const prev = () => setCenterIndex((prev) => wrap(prev - 1))
 
   useEffect(() => {
-    const BOXES = boxesRef.current
-    const total = BOXES.length
-    const wrap = gsap.utils.wrap(0, total)
-
-    const position = { index: 2 }
-
-    const showSlide = (centerIndex) => {
-      BOXES.forEach((box, i) => {
-        let offset = i - centerIndex
-        if (offset > total / 2) offset -= total
-        if (offset < -total / 2) offset += total
-
-        const clampedOffset = Math.max(-2, Math.min(2, offset))
-
-        gsap.to(box, {
-          x: clampedOffset * 220,
-          scale: offset === 0 ? 1.2 : 0.8,
-          opacity: offset === 0 ? 1 : (Math.abs(offset) > 2 ? 0 : 0.6),
-          zIndex: 10 - Math.abs(offset),
-          duration: 0.5,
-          ease: 'power3.out',
-        })
-      })
-    }
-
-    const next = () => {
-      position.index = wrap(position.index + 1)
-      showSlide(position.index)
-    }
-
-    const prev = () => {
-      position.index = wrap(position.index - 1)
-      showSlide(position.index)
-    }
+    showSlide(centerIndex)
 
     document.querySelector('.next')?.addEventListener('click', next)
     document.querySelector('.prev')?.addEventListener('click', prev)
-
     document.addEventListener('keydown', e => {
       if (e.code === 'ArrowLeft') prev()
       if (e.code === 'ArrowRight') next()
@@ -70,9 +62,7 @@ export default function CoverCarousel() {
     Draggable.create(proxyRef.current, {
       type: 'x',
       trigger: '.box',
-      onPress() {
-        this.startXCoord = this.x
-      },
+      onPress() { this.startXCoord = this.x },
       onDrag() {
         const diff = this.startXCoord - this.x
         if (Math.abs(diff) > 100) {
@@ -81,30 +71,36 @@ export default function CoverCarousel() {
         }
       }
     })
-
-    showSlide(position.index)
-  }, [covers])
+  }, [centerIndex, covers])
 
   return (
     <div ref={containerRef} className="boxes relative w-full h-screen overflow-hidden">
       {titleContent && (
-      <div className="text-center mt-10">
-        {titleContent.bigTitle}
-        {titleContent.smallTitle}
-        
-      </div>
-    )}
-      {covers.map((item, i) => (
-        <div
-          key={i}
-          ref={(el) => (boxesRef.current[i] = el)}
-          
-          className="box absolute w-[420px] h-[420px] top-1/2 left-1/2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
-        >
-          <img src={item.image} alt={item.name} className={`relative max-w-full max-h-full rounded-xl object-contain ${slug === 'bike-rent' ? 'w-[360px] h-[360px] mt-20' : ''}`}
-    />
+        <div className="text-center mt-10">
+          {titleContent.bigTitle}
+          {titleContent.smallTitle}
         </div>
-      ))}
+      )}
+
+      {covers.map((item, i) => {
+        // 只渲染当前居中 ±2 张图片，其他图片不渲染
+        if (Math.abs(i - centerIndex) > 2 && Math.abs(i - centerIndex + total) > 2 && Math.abs(i - centerIndex - total) > 2) return null
+
+        return (
+          <div
+            key={i}
+            ref={(el) => (boxesRef.current[i] = el)}
+            className="box absolute w-[420px] h-[420px] top-1/2 left-1/2 flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
+          >
+            <img
+              src={item.image}
+              alt={item.name}
+              loading="lazy" // ✅ 图片懒加载
+              className={`relative max-w-full max-h-full rounded-xl object-contain ${slug === 'bike-rent' ? 'w-[360px] h-[360px] mt-20' : ''}`}
+            />
+          </div>
+        )
+      })}
 
       <div className="controls absolute z-50 top-[calc(50%+22vmin)] left-1/2 -translate-x-1/2 flex justify-between w-[20vmin] min-w-[200px]">
         <button className="prev relative w-12 h-12">
