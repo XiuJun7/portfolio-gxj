@@ -1,29 +1,8 @@
 import emailjs from "@emailjs/browser";
 import { useRef, useState } from "react";
-import { Points, PointMaterial } from "@react-three/drei";
-import * as random from "maath/random";
-import { motion } from "framer-motion";
 
 import useAlert from "../hooks/useAlert.js";
 import Alert from "../components/Alert.jsx";
-
-// 粒子背景
-function FloatingParticles() {
-  const [positions] = useState(() =>
-    random.inSphere(new Float32Array(5000), { radius: 1.5 })
-  );
-  return (
-    <Points positions={positions} stride={3} frustumCulled>
-      <PointMaterial
-        transparent
-        color="#888"
-        size={0.015}
-        sizeAttenuation
-        depthWrite={false}
-      />
-    </Points>
-  );
-}
 
 const Contact = () => {
   const formRef = useRef();
@@ -43,8 +22,8 @@ const Contact = () => {
 
     emailjs
       .send(
-        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
+        import.meta.env.EMAILJS_SERVICE_ID,
+        import.meta.env.EMAILJS_TEMPLATE_ID,
         {
           from_name: form.name,
           to_name: "Goh Xiu Jun",
@@ -52,7 +31,7 @@ const Contact = () => {
           to_email: "xiujun717@gmail.com",
           message: form.message,
         },
-        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+        import.meta.env.EMAILJS_PUBLIC_KEY
       )
       .then(
         () => {
@@ -65,11 +44,7 @@ const Contact = () => {
 
           setTimeout(() => {
             hideAlert(false);
-            setForm({
-              name: "",
-              email: "",
-              message: "",
-            });
+            setForm({ name: "", email: "", message: "" });
           }, 3000);
         },
         (error) => {
@@ -92,20 +67,10 @@ const Contact = () => {
     >
       {alert.show && <Alert {...alert} />}
 
-      {/* 背景光晕 */}
-      <div className="absolute inset-0 -z-10 flex items-center justify-center">
-        <div className="w-[600px] h-[600px] rounded-full bg-gradient-to-r from-gray-200 via-purple-100 to-blue-100 blur-3xl opacity-70" />
-      </div>      
-
       {/* 表单卡片 */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="relative z-10 p-10 w-full max-w-lg rounded-2xl 
-                   bg-white/60 backdrop-blur-md border border-gray-200 
-                   shadow-xl"
+      <div
+        className="relative z-10 p-10 w-full max-w-lg rounded-2xl
+                   bg-white border border-gray-200 shadow-xl"
       >
         <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Let’s Talk
@@ -117,9 +82,7 @@ const Contact = () => {
 
         <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col space-y-6">
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-gray-700">
-              Full Name
-            </span>
+            <span className="text-sm font-semibold text-gray-700">Full Name</span>
             <input
               type="text"
               name="name"
@@ -132,9 +95,7 @@ const Contact = () => {
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-gray-700">
-              Email address
-            </span>
+            <span className="text-sm font-semibold text-gray-700">Email address</span>
             <input
               type="email"
               name="email"
@@ -147,9 +108,7 @@ const Contact = () => {
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-gray-700">
-              Your message
-            </span>
+            <span className="text-sm font-semibold text-gray-700">Your message</span>
             <textarea
               name="message"
               value={form.message}
@@ -170,10 +129,9 @@ const Contact = () => {
             disabled={loading}
           >
             {loading ? "Sending..." : "Send Message"}
-            
           </button>
         </form>
-      </motion.div>
+      </div>
     </section>
   );
 };
