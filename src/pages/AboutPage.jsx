@@ -15,9 +15,16 @@ import Art3d from '../components/Art3d.jsx';
 
 const AboutPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
 
   const center = [0, 0, 0];
-  const radius = isMobile ? 5.5 : 7;
+
+  // 响应式半径
+  const radius = isMobile ? 4 : isTablet ? 5.5 : 7;
+
+  // 响应式 Y 偏移
+  const yOffsetBottom = isMobile ? -1.5 : isTablet ? -1.8 : -2;
+  const yOffsetTop = isMobile ? 2 : isTablet ? 2.8 : 3.5;
 
   const getRingPosition = (index, total, yOffset = 0) => {
     const angle = (index / total) * 2 * Math.PI;
@@ -48,15 +55,27 @@ const AboutPage = () => {
 
   return (
     <section className="min-h-screen w-full flex flex-col relative" id="home">
-      <div className="w-full mx-auto flex flex-col sm:mt-36 mt-5 c-space gap-3">
-        <p className="sm:text-3xl text-xl font-medium text-black text-center font-generalsans">
-          About <span className="waving-hand">👋</span>
-        </p>
-        <p className="hero_tag text-black">GOH XIU JUN</p>
-      </div>
+      {/* 顶部文字 */}
+<div
+  className={`w-full flex flex-col items-center gap-3 relative z-20
+    ${isMobile ? 'mt-16' : 'sm:mt-36 mt-20'}
+  `}
+>
+  <p className={`text-center font-generalsans font-medium
+      ${isMobile ? 'text-xl' : 'sm:text-3xl'}
+  `}>
+    About <span className="waving-hand">👋</span>
+  </p>
+  <p className={`text-center hero_tag text-black
+      ${isMobile ? 'text-lg' : 'text-xl'}
+  `}>
+    GOH XIU JUN
+  </p>
+</div>
+
 
       <div className="h-[500px] w-full rounded-lg mt-10">
-        <Canvas frameloop="demand">
+        <Canvas frameloop="always">
           <ambientLight intensity={0.5} />
           <spotLight position={[5, 5, 5]} angle={0.15} penumbra={1} />
           <directionalLight position={[5, 5, 10]} intensity={0.5} />

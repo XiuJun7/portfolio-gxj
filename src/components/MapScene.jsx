@@ -197,8 +197,8 @@ export default function App() {
         <BikePanels activeStation={activeStation} />
         <Canvas
           style={{ width: "100%", height: "100%" }} // 单独控制 Canvas 全屏
-          camera={{ position: [0, 0, 8], fov: 50 }}
-          frameloop="demand"
+          camera={{ position: [0, 0, 8], fov: 50 }} 
+          frameloop="always"         
         >
           <ambientLight intensity={1} />
           <directionalLight position={[5, 5, 5]} />
