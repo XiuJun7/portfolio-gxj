@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { Analytics } from "@vercel/analytics/react"
 
 import Hero from './sections/Hero.jsx';
 import About from './sections/About.jsx';
@@ -43,6 +44,7 @@ const App = () => {
           </Routes>
         </Suspense>
       </main>
+      <Analytics />
     </Router>
   );
 };
